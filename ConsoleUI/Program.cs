@@ -16,7 +16,7 @@ namespace ConsoleUI
     class Program
     {
         private static readonly IServiceFactory _serviceFactory;
-       
+
         static void Main(string[] args)
         {
 
@@ -33,42 +33,17 @@ namespace ConsoleUI
             IProductService productService = new ProductManager(new ProductDal(), campaignService);
             IPurchaseService purchaseService = new PurchaseManager(new PurchaseDal(new Purchase()));
             IVendingMachineService vendingMachineService = new VendingMachineManager(productService, purchaseService);
-            ISubMenu subMenu = new SubMenu(vendingMachineService,campaignService,purchaseService,productService);
+            ISubMenu subMenu = new SubMenu(vendingMachineService, campaignService, purchaseService, productService);
             IMenuService menuService = new MenuManager(subMenu, vendingMachineService);
-           
 
-            menuService.Display();
-        
 
-        
             menuService.Display();
 
 
 
+            menuService.Display();
 
 
-        
-            ICampaignService camps
-                = new CampaignManager(new CampaignDal());
-            camps.GetProducCampaignList();
-            camps.EvaluateMinCampaignPrice(new List<int>() {1, 2});
-            Console.WriteLine("Ürün seçiniz");
-            Console.WriteLine("---------------Ürünler---------------");
-            foreach (var product in productService.GetAllProducts())
-            {
-                Console.WriteLine("ID: " + product.ProductId + "\tÜrün Adı: " + product.ProductName + "\tFiyat: " + product.Price);
-            }
-
-            int chosenProductId = Convert.ToInt16(Console.ReadLine());
-
-            productService.AddProductToCart(chosenProductId);
-
-            if (productService.CheckIfCampaignExists(chosenProductId))
-            {
-
-            }
-
-            productService.CheckIfCampaignExists(3);
         }
 
     }

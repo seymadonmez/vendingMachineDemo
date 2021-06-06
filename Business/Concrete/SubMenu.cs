@@ -120,10 +120,11 @@ namespace Business.Concrete
                             }
 
                             _purchaseService.RemoveMoney(chosenProduct.Price);
+                            var moneyChange = _purchaseService.GiveChange();
+                            Console.WriteLine(moneyChange);
                             Console.WriteLine($"Enjoy your {chosenProduct.ProductName}\n");
                             Console.WriteLine("Do you want to adding product? Y/N");
-                            var result2 = _purchaseService.GiveChange();
-                            Console.WriteLine(result2);
+                            
                             response =Console.ReadLine();
                         }
                         else if (!_vendingMachineService.ItemExists(chosenProductId))
