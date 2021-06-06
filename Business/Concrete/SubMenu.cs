@@ -29,22 +29,6 @@ namespace Business.Concrete
             //_serviceFactory = serviceFactory;
         }
 
-        public void Goster()
-        {
-            while (true)
-            {
-                Console.WriteLine();
-                Console.WriteLine("Please choose from the following options:");
-                Console.WriteLine("1] >> Feed Money");
-                Console.WriteLine("2] >> Select Product");
-                Console.WriteLine("3] >> Finish Transaction");
-                Console.WriteLine("Q] >> Return to Main Menu");
-
-                Console.Write("What option do you want to select? ");
-                string input = Console.ReadLine();
-            }
-        }
-
         public void Display()
         {
             while (true)
@@ -121,7 +105,7 @@ namespace Business.Concrete
 
                             _purchaseService.RemoveMoney(chosenProduct.Price);
                             var moneyChange = _purchaseService.GiveChange();
-                            Console.WriteLine(moneyChange);
+                           
                             Console.WriteLine($"Enjoy your {chosenProduct.ProductName}\n");
                             Console.WriteLine("Do you want to adding product? Y/N");
                             

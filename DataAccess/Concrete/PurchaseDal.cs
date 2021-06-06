@@ -24,8 +24,6 @@ namespace DataAccess.Concrete
                 return false;
             }
 
-            string message = $"FEED MONEY: ";
-
             // Add the money
             _purchase.MoneyInMachine += amountInserted;
             return true;
@@ -45,88 +43,18 @@ namespace DataAccess.Concrete
 
         public string GiveChange()
         {
-            string result = string.Empty;
-            int quarters = 0;
-            int dimes = 0;
-
-            // Logging message "CANDYBARNAME A1"
-            string message = $"GIVE CHANGE: ";
-
-            // Logging before: current money in machine
-            double before = _purchase.MoneyInMachine;
-
+            
             if (_purchase.MoneyInMachine > 0)
             {
-                while (_purchase.MoneyInMachine > 0)
-                {
-                    if (_purchase.MoneyInMachine >= 0.25)
-                    {
-                        quarters++;
-                        this.RemoveMoney(0.25);
-                    }
-                    else if (_purchase.MoneyInMachine >= 0.10)
-                    {
-                        dimes++;
-                        this.RemoveMoney(0.10);
-                    }
-                    else if (_purchase.MoneyInMachine >= 0.05)
-                    {
-                        this.RemoveMoney(0.05);
-                    }
-                }
-
-                result = GetMessage(quarters, dimes);
+                return _purchase.MoneyInMachine.ToString();
 
             }
-            else
-            {
-                result = "No money to return";
-            }
-
-            return result;
+            return  "No money to return";
         }
 
         public double GetMoney()
         {
             return _purchase.MoneyInMachine;
-        }
-
-        private string GetMessage(int quarters, int dimes)
-        {
-            string quarterString = string.Empty;
-            string dS = string.Empty;
-
-            if (quarters > 0)
-            {
-                quarterString = $"{quarters} quarters";
-            }
-
-            if (dimes > 0)
-            {
-                dS = $"{dimes} dimes";
-            }
-
-
-            string result = $"Your change is ";
-
-            if (quarters > 0 && dimes > 0 )
-            {
-                result += $"{quarterString}, {dS}";
-            }
-            else if ((quarters > 0 && dimes > 0) || (quarters > 0))
-            {
-                result += $"{quarterString} and {dS}";
-            }
-            else if (dimes > 0 )
-            {
-                result += $"{dS}";
-            }
-            else
-            {
-                result = "No change to give.";
-            }
-
-            return result;
         }
 
     }

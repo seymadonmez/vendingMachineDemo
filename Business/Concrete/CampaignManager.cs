@@ -118,7 +118,6 @@ namespace Business.Concrete
 
         }
 
-
         public bool CheckIfCampaignExists(int productId)
         {
             var result = _campaignDal.GetCampaignByProductId(productId);
@@ -129,8 +128,6 @@ namespace Business.Concrete
 
             return true;
         }
-
-
 
         public Dictionary<int, double> GetProductCampaignPrice(int productId)
         {

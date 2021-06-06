@@ -20,8 +20,8 @@ namespace ConsoleUI
         static void Main(string[] args)
         {
 
-            //IKernel kernal = new StandardKernel(new BusinessModule());
-            //IServiceFactory serviceFactory = new ServiceFactory(kernal);
+            //IKernel kernel = new StandardKernel(new BusinessModule());
+            //IServiceFactory serviceFactory = new ServiceFactory(kernel);
             //serviceFactory.CreateCampaignService();
             //serviceFactory.CreatePurchaseService();
             //serviceFactory.CreateVendingMachineServiceService();
@@ -38,8 +38,6 @@ namespace ConsoleUI
 
 
             menuService.Display();
-
-
 
             menuService.Display();
 

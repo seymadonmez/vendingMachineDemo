@@ -7,6 +7,5 @@ namespace Business.Abstract
     public interface ISubMenu
     {
         void Display();
-        void Goster();
     }
 }
