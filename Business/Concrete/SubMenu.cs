@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Xml.Serialization;
 using Business.Abstract;
 using ConsoleUI;
 using DataAccess.Concrete;
@@ -6,7 +8,7 @@ using Entities.Concrete;
 
 namespace Business.Concrete
 {
-    public class SubMenu
+    public class SubMenu:ISubMenu
     {
 
         //private readonly IServiceFactory _serviceFactory;
@@ -14,6 +16,10 @@ namespace Business.Concrete
         private ICampaignService _campaignService;
         private IPurchaseService _purchaseService;
         private IProductService _productService;
+
+        List<int> productList = new List<int>();
+
+        ShoppingCart shoppingCart = new ShoppingCart(new CartDal(new CartItem()));
         public SubMenu(IVendingMachineService vendingMachineService, ICampaignService campaignService,IPurchaseService purchaseService,IProductService productService)
         {
             _vendingMachineService = vendingMachineService;
@@ -23,11 +29,27 @@ namespace Business.Concrete
             //_serviceFactory = serviceFactory;
         }
 
+        public void Goster()
+        {
+            while (true)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Please choose from the following options:");
+                Console.WriteLine("1] >> Feed Money");
+                Console.WriteLine("2] >> Select Product");
+                Console.WriteLine("3] >> Finish Transaction");
+                Console.WriteLine("Q] >> Return to Main Menu");
+
+                Console.Write("What option do you want to select? ");
+                string input = Console.ReadLine();
+            }
+        }
+
         public void Display()
         {
             while (true)
             {
-                Console.Clear();
+               // Console.Clear();
                 Console.WriteLine();
                 Console.WriteLine("Please choose from the following options:");
                 Console.WriteLine("1] >> Feed Money");
@@ -67,28 +89,42 @@ namespace Business.Concrete
                 {
                     Console.WriteLine("Do you want to adding product? Y/N");
                     string response = Console.ReadLine().ToUpper();
-                    while (input!="Y")
+                    while (response!="N")
                     {
                         _vendingMachineService.DisplayAllItems();
-                        Console.Write(">>> What item do you want? ");
+                        Console.Write(">>> Which product do you want to choose? ");
                         int chosenProductId = Convert.ToInt16(Console.ReadLine());
                         var chosenProduct = _productService.GetProduct(chosenProductId);
-
-                        if (_vendingMachineService.ItemExists(chosenProductId) && _vendingMachineService.RetreiveItem(chosenProductId))
+                        
+                        //ürün mevcut ise
+                        if (_vendingMachineService.ItemExists(chosenProductId)&& _purchaseService.GetMoney()>0)
                         {
-                            if (_campaignService.GetProductCampaignPrice(chosenProductId) != null)
+                            //sepete eklensin
+                             shoppingCart.AddToCart(chosenProductId);
+                             productList.Add(chosenProductId);
+                             
+                            //seçilen ürün adedi 2 den fazla ise kampanyalı fiyatlar kontrol edilsin
+                            if (productList.Count>2)
                             {
-
-                                var result = _campaignService.GetProductCampaignPrice(chosenProductId)
-                                    .TryGetValue(chosenProductId, out double campaignPrice);
-                                chosenProduct.Price = campaignPrice;
+                                //eğer seçilen ürünlerden biri ile ilgili bir kampanya bulunuyorsa
+                                var productCampaignPrice = _campaignService.GetProductCampaignPrice(chosenProductId);
+                                if (productCampaignPrice.TryGetValue(chosenProductId, out double campaignPrice))
+                                {
+                                    chosenProduct.Price = campaignPrice;
+                                    var minCampaignPrice = _campaignService.EvaluateMinCampaignPrice(productList);
+                                    _purchaseService.RemoveMoney(minCampaignPrice);
+                                    var result=_purchaseService.GiveChange();
+                                    Console.WriteLine(result);
+                                    return;
+                                }
                             }
+
+                            _purchaseService.RemoveMoney(chosenProduct.Price);
                             Console.WriteLine($"Enjoy your {chosenProduct.ProductName}\n");
                             Console.WriteLine("Do you want to adding product? Y/N");
-                            
-                                ShoppingCart shoppingCart = new ShoppingCart(new CartDal(new CartItem()));
-                                shoppingCart.AddToCart(chosenProductId);
-                                break;
+                            var result2 = _purchaseService.GiveChange();
+                            Console.WriteLine(result2);
+                            response =Console.ReadLine();
                         }
                         else if (!_vendingMachineService.ItemExists(chosenProductId))
                         {
@@ -99,12 +135,14 @@ namespace Business.Concrete
                         {
                             Console.WriteLine("Product does not exists");
                         }
-                        else if (Convert.ToDouble(_purchaseService.GetMoney()) < chosenProduct.Price)
+                        else if (Convert.ToDouble(_purchaseService.GetMoney()) < chosenProduct.Price ||_purchaseService.GetMoney()<0)
                         {
-                            Console.WriteLine("Not enourh money");
+                            Console.WriteLine("There is not enough money!");
                             break;
                         }
                     }
+
+                   
                 }
                 else if (input == "3")
                 {

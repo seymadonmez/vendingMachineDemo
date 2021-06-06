@@ -10,6 +10,7 @@ using Entities.Concrete;
 
 namespace Business.Concrete
 {
+    //Kampanya ile ilgili tüm iş kuralları yönetilir
     public class CampaignManager:ICampaignService
     {
         private ICampaignDal _campaignDal;
@@ -43,15 +44,15 @@ namespace Business.Concrete
             throw new NotImplementedException();
         }
 
-
-        public double EvaluateCampaignPrice(List<int> productlist)
+        //kampanyalı fiyatı hesaplayan metot
+        public double EvaluateMinCampaignPrice(List<int> productlist)
         {
             foreach (var productId in productlist)
             {
                 var result = _campaignDal.GetCampaignByProductId(productId).ToList();
                 if (result != null)
                 {
-                    var campaignPrices = this.GetProducCampaignList();
+                    var campaignPrices = GetProducCampaignList();
                     var products = this.Reverse(campaignPrices);
                     Dictionary<int,double> tempDictionary = new Dictionary<int, double>();
                     
@@ -93,10 +94,6 @@ namespace Business.Concrete
             return null;
         }
 
-
-
-
-
         private IDictionary<TValue, List<TKey>> Reverse<TKey, TValue>( IDictionary<TKey, TValue> src)
         {
             var productCampaign=this.GetProducCampaignList();
@@ -135,29 +132,11 @@ namespace Business.Concrete
 
 
 
-        public ProductCampaign GetMinPriceByCampaign(int productId)
-        {
-            var result = _campaignDal.GetCampaignByProductId(productId);
-            Hashtable ht = new Hashtable();
-
-
-            result.Min(p=>p.CampaignPrice);
-            return null;
-        }
-
         public Dictionary<int, double> GetProductCampaignPrice(int productId)
         {
 
             Dictionary<int, double> result = _campaignDal.GetCampaignByProductId(productId).ToDictionary(x=>x.ProductId,x=>x.CampaignPrice);
-            //foreach (KeyValuePair<int, double> kvp in tempDictionary)
-            //{
-            //    tempDictionary.Add( _campaignDal.GetAll(productId), _campaignDal.GetCampaignByProductId(productId).CampaignPrice);
-  
-
-            //}
-
             return result;
-
         }
     }
 }

@@ -8,5 +8,7 @@ namespace DataAccess.Abstract
     public interface ICartDal
     {
         List<CartItem> GetAll();
+        void Add(int id);
+
     }
 }

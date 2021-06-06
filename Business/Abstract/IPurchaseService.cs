@@ -7,9 +7,9 @@ namespace Business.Abstract
 {
     public interface IPurchaseService
     {
-        decimal GetMoney();
+        double GetMoney();
         bool AddMoney(string amount);
-        bool RemoveMoney(decimal amountToRemove);
+        double RemoveMoney(double amountToRemove);
         string GiveChange();
     
     }

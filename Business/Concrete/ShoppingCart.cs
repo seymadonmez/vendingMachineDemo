@@ -14,13 +14,9 @@ namespace ConsoleUI
     {
         private ICartDal _cartDal;
 
- 
-        private IProductService _productService = new ProductManager(new ProductDal(),new CampaignManager(new CampaignDal()));
-
         public ShoppingCart(ICartDal cartDal)
         {
             _cartDal = cartDal;
-          
         }
 
         public void Display()
@@ -32,14 +28,10 @@ namespace ConsoleUI
                 Console.WriteLine(prod.ProductId + " value: " + prod.Quantity);
         }
 
-        public void AddProduct(Product product)
-        {
-            _productService.AddProductToCart(product.ProductId);
-        }
         public void AddToCart(int id)
         {
-            var cartItem = new CartItem() {ProductId = id,Quantity =1 };
-            cartItem.Quantity++;
+           _cartDal.Add(id);
+
         }
 
         public List<CartItem> GetCartItems()

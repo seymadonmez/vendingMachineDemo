@@ -9,10 +9,13 @@ namespace DataAccess.Concrete
 {
     public class ProductDal:IProductDal
     {
+        //Ürünlerin veri kaynağına erişimi yapılır.
+
         private List<Product> _products;
 
         public ProductDal()
         {
+
             _products = new List<Product>()
             {
                 new Product{ProductId = 1,ProductName = "Dimes",Price = 4.2},

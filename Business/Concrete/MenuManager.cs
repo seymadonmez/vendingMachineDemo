@@ -10,11 +10,19 @@ namespace Business.Concrete
 {
     public class MenuManager:IMenuService
     {
-        private readonly IServiceFactory _serviceFactory;
+        //private readonly IServiceFactory _serviceFactory;
 
-        public MenuManager(IServiceFactory serviceFactory)
+        //public MenuManager(IServiceFactory serviceFactory)
+        //{
+        //    _serviceFactory = serviceFactory;
+        //}
+        private ISubMenu _subMenu;
+        private IVendingMachineService _vendingMachineService;
+
+        public MenuManager(ISubMenu subMenu,IVendingMachineService vendingMachineService)
         {
-            _serviceFactory = serviceFactory;
+            _subMenu = subMenu;
+            _vendingMachineService = vendingMachineService;
         }
 
         public void Display()
@@ -35,16 +43,15 @@ namespace Business.Concrete
                 if (input == "1")
                 {
                     Console.WriteLine("Displaying Items");
-                    _serviceFactory.CreateVendingMachineServiceService().DisplayAllItems();
+                    _vendingMachineService.DisplayAllItems();
+                    _subMenu.Display(); 
                 }
                 else if (input == "2")
                 {
-                    SubMenu subMenu = new SubMenu(new VendingMachineManager(
-                            new CampaignManager(new CampaignDal()),
-                            new PurchaseManager(new PurchaseDal(new Purchase())),
-                            new ProductManager(new ProductDal(), new CampaignManager(new CampaignDal()))),
-                        new CampaignManager(new CampaignDal()), new PurchaseManager(new PurchaseDal(new Purchase())), new ProductManager(new ProductDal(), new CampaignManager(new CampaignDal())));
-                    subMenu.Display();
+                    //SubMenu subMenu = new SubMenu(new VendingMachineManager(
+                    //        new ProductManager(new ProductDal(),new CampaignManager(new CampaignDal())),
+                    //        new PurchaseManager(new PurchaseDal(new Purchase())));
+                    _subMenu.Display();
                 }
                 else if (input.ToUpper() == "Q")
                 {
@@ -63,7 +70,7 @@ namespace Business.Concrete
 
         private static void PrintHeader()
         {
-            Console.WriteLine("WELCOME TO THE BEST VENDING MACHINE EVER!!!! (Distant crowd roar)");
+            Console.WriteLine("WELCOME TO THE VENDING MACHINE!");
         }
 
     }

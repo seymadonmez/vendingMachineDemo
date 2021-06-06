@@ -15,8 +15,7 @@ namespace Business.Abstract
         //List<ProductCampaignDto> GetCampaignByPrice(int productId);
         Dictionary<int, double> GetMinCampaignPriceOfProduct(int productId);
         bool CheckIfCampaignExists(int productId);
-        ProductCampaign GetMinPriceByCampaign(int productId);
-        double EvaluateCampaignPrice(List<int> productlist);
+        double EvaluateMinCampaignPrice(List<int> productlist);
         Dictionary<int, double> GetProductCampaignPrice(int productId);
         Dictionary<int, double> GetProducCampaignList();
     }

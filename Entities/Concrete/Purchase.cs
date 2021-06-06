@@ -7,6 +7,6 @@ namespace Entities.Concrete
 {
     public class Purchase:IEntity
     {
-        public decimal MoneyInMachine { get;  set; }
+        public double MoneyInMachine { get;  set; }
     }
 }

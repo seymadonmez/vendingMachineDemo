@@ -12,16 +12,15 @@ namespace DataAccess.Concrete
 
         public PurchaseDal(Purchase purchase)
         {
-            _purchase = new Purchase() {MoneyInMachine = 100.0M};
+            _purchase = new Purchase() {MoneyInMachine = 0};
         }
 
-        
 
         public bool AddMoney(string amount)
         {
-            if (!decimal.TryParse(amount, out decimal amountInserted))
+            if (!double.TryParse(amount, out double amountInserted))
             {
-                amountInserted = 0M;
+                amountInserted = 0;
                 return false;
             }
 
@@ -33,15 +32,15 @@ namespace DataAccess.Concrete
 
         }
 
-        public bool RemoveMoney(decimal amountToRemove)
+        public double RemoveMoney(double amountToRemove)
         {
             if (_purchase.MoneyInMachine <= 0)
             {
-                return false;
+                return -1;
             }
 
             _purchase.MoneyInMachine -= amountToRemove;
-            return true;
+            return _purchase.MoneyInMachine;
         }
 
         public string GiveChange()
@@ -49,36 +48,34 @@ namespace DataAccess.Concrete
             string result = string.Empty;
             int quarters = 0;
             int dimes = 0;
-            int nickels = 0;
 
             // Logging message "CANDYBARNAME A1"
             string message = $"GIVE CHANGE: ";
 
             // Logging before: current money in machine
-            decimal before = _purchase.MoneyInMachine;
+            double before = _purchase.MoneyInMachine;
 
             if (_purchase.MoneyInMachine > 0)
             {
                 while (_purchase.MoneyInMachine > 0)
                 {
-                    if (_purchase.MoneyInMachine >= 0.25M)
+                    if (_purchase.MoneyInMachine >= 0.25)
                     {
                         quarters++;
-                        this.RemoveMoney(0.25M);
+                        this.RemoveMoney(0.25);
                     }
-                    else if (_purchase.MoneyInMachine >= 0.10M)
+                    else if (_purchase.MoneyInMachine >= 0.10)
                     {
                         dimes++;
-                        this.RemoveMoney(0.10M);
+                        this.RemoveMoney(0.10);
                     }
-                    else if (_purchase.MoneyInMachine >= 0.05M)
+                    else if (_purchase.MoneyInMachine >= 0.05)
                     {
-                        nickels++;
-                        this.RemoveMoney(0.05M);
+                        this.RemoveMoney(0.05);
                     }
                 }
 
-                result = GetMessage(quarters, dimes, nickels);
+                result = GetMessage(quarters, dimes);
 
             }
             else
@@ -89,16 +86,15 @@ namespace DataAccess.Concrete
             return result;
         }
 
-        public decimal GetMoney()
+        public double GetMoney()
         {
             return _purchase.MoneyInMachine;
         }
 
-        private string GetMessage(int quarters, int dimes, int nickels)
+        private string GetMessage(int quarters, int dimes)
         {
             string quarterString = string.Empty;
             string dS = string.Empty;
-            string nS = string.Empty;
 
             if (quarters > 0)
             {
@@ -110,28 +106,20 @@ namespace DataAccess.Concrete
                 dS = $"{dimes} dimes";
             }
 
-            if (nickels > 0)
-            {
-                nS = $"{nickels} nickels";
-            }
 
             string result = $"Your change is ";
 
-            if (quarters > 0 && dimes > 0 && nickels > 0)
+            if (quarters > 0 && dimes > 0 )
             {
-                result += $"{quarterString}, {dS}, and {nS}";
+                result += $"{quarterString}, {dS}";
             }
-            else if ((quarters > 0 && dimes > 0) || (quarters > 0 && nickels > 0))
+            else if ((quarters > 0 && dimes > 0) || (quarters > 0))
             {
-                result += $"{quarterString} and {dS}{nS}";
+                result += $"{quarterString} and {dS}";
             }
-            else if (dimes > 0 && nickels > 0)
+            else if (dimes > 0 )
             {
-                result += $"{dS} and {nS}";
-            }
-            else if (quarters > 0 || dimes > 0 || nickels > 0)
-            {
-                result += $"{quarterString}{dS}{nS}";
+                result += $"{dS}";
             }
             else
             {

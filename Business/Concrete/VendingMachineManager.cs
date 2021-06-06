@@ -15,19 +15,12 @@ namespace Business.Concrete
 
         public Dictionary<int, IProductService> VendingMachineItems = new Dictionary<int, IProductService>();
 
-        public VendingMachineManager(IProductService productService,ICampaignService campaignService,IPurchaseService purchaseService)
-        {
-            _productService = productService;
-            _campaignService = campaignService;
-            _purchaseService = purchaseService;
-        }
 
-        public VendingMachineManager(ICampaignService campaignService, IPurchaseService purchaseService,
-            IProductService productService)
+        public VendingMachineManager(IProductService productService,IPurchaseService purchaseService)
         {
-            _campaignService = campaignService;
-            _purchaseService = purchaseService;
             _productService = productService;
+            _purchaseService = purchaseService;
+            
 
         }
 
@@ -35,14 +28,14 @@ namespace Business.Concrete
         public string NotEnoughMoneyError = "Not enough money in the machine to complete the transaction.";
         public string MessageToUser;
 
-        public decimal MoneyInMachine
+        public double MoneyInMachine
         {
             get { return Money.MoneyInMachine; }
         }
 
         public void DisplayAllItems()
         {
-            Console.WriteLine($"\n\n{"Product".PadRight(47)} {"Price".PadLeft(7)}");
+            Console.WriteLine($"\n\n{"Product".PadRight(7)} {"Price".PadLeft(7)}");
             foreach (var product in _productService.GetAllProducts())
             {
                 Console.WriteLine("ID: " + product.ProductId + "\t Product Name: " + product.ProductName +
@@ -58,15 +51,13 @@ namespace Business.Concrete
 
         public bool RetreiveItem(int itemNumber)
         {
-            // If the item exists (not Q1 or something like that)
-            // and we can remove the item
-            // and we have more money in the machine than the price
+
             if (_productService.CheckIfProductExists(itemNumber)
                 && Convert.ToDouble(_purchaseService.GetMoney()) >= _productService.GetProduct(itemNumber).Price)
             {
 
                 // Remove the money
-                _purchaseService.RemoveMoney(Convert.ToDecimal(_productService.GetProduct(itemNumber).Price));
+                _purchaseService.RemoveMoney(Convert.ToDouble(_productService.GetProduct(itemNumber).Price));
 
                 return true;
             }

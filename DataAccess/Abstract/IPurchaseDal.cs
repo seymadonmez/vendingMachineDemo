@@ -8,9 +8,8 @@ namespace DataAccess.Abstract
     public interface IPurchaseDal
     {
         bool AddMoney(string amount);
-        bool RemoveMoney(decimal amountToRemove);
-
+        double RemoveMoney(double amountToRemove);
         string GiveChange();
-        decimal GetMoney();
+        double GetMoney();
     }
 }

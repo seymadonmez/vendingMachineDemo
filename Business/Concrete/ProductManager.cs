@@ -9,12 +9,12 @@ using Entities.Concrete;
 
 namespace Business.Concrete
 {
+    //Ürünle ilgili tüm iş kurallarının yönetildiği yerdir.
     public class ProductManager:IProductService
     {
         private ICampaignService _campaignService;
         private IProductDal _productDal;
         
-
 
         public ProductManager(IProductDal productDal,ICampaignService campaignService)
         {
@@ -22,6 +22,7 @@ namespace Business.Concrete
             _campaignService = campaignService;
         }
 
+        //Tüm ürünleri listeleyen metot
         public List<Product> GetAllProducts()
         {
             return _productDal.GetAll();
@@ -35,18 +36,18 @@ namespace Business.Concrete
             {
                 return false;
             }
-
             return true;
-
         }
 
         public Product AddProductToCart(int productId)
         {
-           return _productDal.GetProduct(productId);
+            //var result=_productDal.GetAll();
+            //result.Add(productId);
+            return _productDal.GetProduct(productId);
 
         }
 
-        public double Hesapla(int productId)
+        public double EvaluateMinPrice(int productId)
         {
             var campaignList = _campaignService.GetCampaign(productId).ToList();
             double minPrice = campaignList.IndexOf(0);
@@ -55,7 +56,6 @@ namespace Business.Concrete
                 if (campaignList.IndexOf(i) < minPrice)
                     minPrice = campaignList.IndexOf(i);
             }
-
 
             var result = _productDal.GetProduct(productId);
             return result.Price;

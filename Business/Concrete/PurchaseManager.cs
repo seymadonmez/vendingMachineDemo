@@ -7,7 +7,7 @@ using Entities.Concrete;
 
 namespace Business.Concrete
 {
-    public class PurchaseManager:IPurchaseService
+    public class PurchaseManager : IPurchaseService
     {
         private IPurchaseDal _purchaseDal;
 
@@ -15,34 +15,36 @@ namespace Business.Concrete
         {
             _purchaseDal = purchaseDal;
         }
-        public decimal GetMoney()
-        {
-            return _purchaseDal.GetMoney();
-        }
+      
 
         public bool AddMoney(string amount)
         {
             var result = _purchaseDal.AddMoney(amount);
             if (result != null)
             {
-                return false;
+                return true;
             }
-            return true;
+            return false;
         }
 
-        public bool RemoveMoney(decimal amountToRemove)
+        public double RemoveMoney(double amountToRemove)
         {
             var result = _purchaseDal.RemoveMoney(amountToRemove);
-            if (result != null)
+            if (result >0)
             {
-                return false;
+                return result;
             }
-            return true; 
+            return -1; 
         }
 
         public string GiveChange()
         {
             return _purchaseDal.GiveChange();
+        }
+
+        public double GetMoney()
+        {
+            return _purchaseDal.GetMoney();
         }
     }
 }

@@ -27,52 +27,50 @@ namespace ConsoleUI
             //serviceFactory.CreateVendingMachineServiceService();
             ////var kernel = new StandardKernel();
             ////kernel.Load(Assembly.GetExecutingAssembly());
-            ////var mailSender = kernel.Get<IServiceFactory>();
-
-            //var formHandler = new ServiceFactory(mailSender);
             //ServiceFactory.Handle();
 
-            //Menu menu = new Menu(_serviceFactory);
-            //menu.Display();
-
+            ICampaignService campaignService = new CampaignManager(new CampaignDal());
+            IProductService productService = new ProductManager(new ProductDal(), campaignService);
+            IPurchaseService purchaseService = new PurchaseManager(new PurchaseDal(new Purchase()));
+            IVendingMachineService vendingMachineService = new VendingMachineManager(productService, purchaseService);
+            ISubMenu subMenu = new SubMenu(vendingMachineService,campaignService,purchaseService,productService);
+            IMenuService menuService = new MenuManager(subMenu, vendingMachineService);
            
 
+            menuService.Display();
+        
+
+        
+            menuService.Display();
 
 
 
-            List<Product> productList = new List<Product>();
-            ProductManager productManager = new ProductManager(new ProductDal(), new CampaignManager(new CampaignDal()));
 
+
+        
             ICampaignService camps
                 = new CampaignManager(new CampaignDal());
             camps.GetProducCampaignList();
-            camps.EvaluateCampaignPrice(new List<int>() {1, 2});
+            camps.EvaluateMinCampaignPrice(new List<int>() {1, 2});
             Console.WriteLine("Ürün seçiniz");
             Console.WriteLine("---------------Ürünler---------------");
-            foreach (var product in productManager.GetAllProducts())
+            foreach (var product in productService.GetAllProducts())
             {
                 Console.WriteLine("ID: " + product.ProductId + "\tÜrün Adı: " + product.ProductName + "\tFiyat: " + product.Price);
             }
 
             int chosenProductId = Convert.ToInt16(Console.ReadLine());
 
-            productManager.AddProductToCart(chosenProductId);
+            productService.AddProductToCart(chosenProductId);
 
-            if (productManager.CheckIfCampaignExists(chosenProductId))
+            if (productService.CheckIfCampaignExists(chosenProductId))
             {
 
             }
 
-
-
-
-            CampaignManager campaignManager = new CampaignManager(new CampaignDal());
-
-            productManager.CheckIfCampaignExists(3);
+            productService.CheckIfCampaignExists(3);
         }
 
-
-        
     }
 
 }

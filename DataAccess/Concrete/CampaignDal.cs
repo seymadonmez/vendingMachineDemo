@@ -10,7 +10,7 @@ namespace DataAccess.Concrete
 {
     public class CampaignDal:ICampaignDal
     {
-        
+        //Kampanyaların veri kaynağına erişimi yapılır.
         private List<Campaign> _campaigns;
         private List<ProductCampaignDto> _productCampaignDtos;
         private List<ProductCampaign> _productCampaigns;
@@ -45,6 +45,8 @@ namespace DataAccess.Concrete
                 new ProductCampaignDto{CampaignId = 9, ProductIdList = new List<int>(){3,1},CampaignPrice =new Dictionary<int, double>() {{ 7, 0 },{3,7}}}
 
             };
+
+            //Kampanyalı fiyatların bulunduğu liste
             _productCampaigns = new List<ProductCampaign>()
             {
                 new ProductCampaign() {Id = 1,CampaignId = 1, ProductId = 1, CampaignPrice = 4},
@@ -83,13 +85,13 @@ namespace DataAccess.Concrete
         public List<int> GetCampaign(int productId)
         {
             var result= _productCampaigns.FindAll(c => c.ProductId == productId);
-            List<int> resuList = new List<int>();
+            List<int> resultList = new List<int>();
             foreach (var p in result)
             {
-                resuList.Add(p.ProductId);
+                resultList.Add(p.ProductId);
             }
 
-            return resuList;
+            return resultList;
             //return _productCampaigns.Find(c => c.ProductIdList.Contains(productId)).ProductIdList;
         }
 

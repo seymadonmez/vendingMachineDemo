@@ -4,8 +4,9 @@ using System.Text;
 
 namespace Business.Abstract
 {
-    public interface IMenuService
+    public interface ISubMenu
     {
         void Display();
+        void Goster();
     }
 }
